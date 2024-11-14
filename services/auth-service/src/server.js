@@ -13,7 +13,7 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 
 // Puerto en el que corre el servidor
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
