@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  reviews-service:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - NODE_ENV=development
+    networks:
+      - kong-net
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - kong-net
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - kong-net
+  
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - kong-net
+
+networks:
+  kong-net:
+    external: true
+  
+volumes:
+  mongodb_data:
