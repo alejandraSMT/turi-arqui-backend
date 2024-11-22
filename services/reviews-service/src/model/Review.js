@@ -8,6 +8,10 @@ const reviewsSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             default: () => new mongoose.Types.ObjectId(),
         },
+        placeId : {
+            type: String,
+            required: true
+        },
         "user": userSchema,
         "publishDate": {
             type: Date,

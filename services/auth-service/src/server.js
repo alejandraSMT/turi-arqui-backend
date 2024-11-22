@@ -21,6 +21,7 @@ app.listen(PORT, () => {
 app.get('/health', (req, res) => {
     const healthCheck = {
         uptime: process.uptime(),
+        responseTime: process.hrtime(),
         message: 'OK',
         timestamp: Date.now()
     };
