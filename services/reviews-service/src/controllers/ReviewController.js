@@ -2,8 +2,10 @@ const Review = require('../model/Review.js');
 
 exports.getAllReviews = async (req, res) => {
     try{
-        const result = await Review.find().select(['-comments']);
-        res.json(result);
+        const { placeId } = req.params;
+        const result = await Review.find({placeId: placeId}).select(['-comments']);
+
+        res.status(200).json(result);
     } catch(e) {
         console.error(e);
         res.status(500).json({error: "Can't get reviews"});
@@ -29,13 +31,15 @@ exports.getComments = async (req, res) => {
 exports.postCommentToReview = async (req, res) => {
     try{
         const reviewId = req.params.reviewId;
-        const { name, description } = req.body;
+        const { name, comment } = req.body;
 
-        const newComment = new Comment({
-            name: name,
-            description: description
-        });
-        
+        const newComment = {
+            user: {
+                name: name
+            },
+            comment: comment
+        };
+
         const response = await Review.findByIdAndUpdate(
             reviewId,
             {
@@ -52,18 +56,19 @@ exports.postCommentToReview = async (req, res) => {
 
     }catch(e) {
         console.error(e);
-        res.status(500).json({error: "Can't get review comments"});
+        res.status(500).json({error: "Can't post comment to review"});
     }
 }
 
 exports.postReview = async (req, res) => {
     try {
-        const { rating, title, description, user } = req.body;
+        const { placeId, rating, title, description, user } = req.body;
         if(rating <= 0){
             res.status(400).json({error: "El rating debe ser mayor a 0"});
         }
 
         const review = new Review({
+            placeId: placeId,
             rating: rating,
             title: title, 
             description: description,
@@ -81,7 +86,7 @@ exports.postReview = async (req, res) => {
 
 exports.likeReview = async (req, res) => {
     try{
-        const {reviewId, userId} = req.body;
+        const { reviewId, userId } = req.params;
 
         const review = await Review.findById(reviewId);
         const userLiked = Array.from(review.likes).includes(userId);
@@ -102,10 +107,24 @@ exports.likeReview = async (req, res) => {
         if (!updateLike) {
             return res.status(404).json({ error: 'Review not found' });
         }
-        res.json(updateLike);
+        res.status(200).json(updateLike);
 
     }catch(e){
         console.log(e);
         res.status(500).json({error: "Can't like review"});
+    }
+}
+
+exports.checkLike = async (req,res) => {
+    try{
+        const { reviewId, userId } = req.params;
+        const review = await Review.findById(reviewId);
+        const alreadyLiked = Array.from(review.likes).includes(userId);
+
+        res.status(200).json({alreadyLiked: alreadyLiked});
+
+    }catch (error){
+        console.error(error);
+        res.status(500).json({error: "Error checking for like"});
     }
 }

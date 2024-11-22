@@ -29,6 +29,18 @@ services:
     networks:
       - kong-net
 
+  mongodb:
+      image: mongodb/mongodb-community-server:6.0-ubi8
+      ports:
+        - '27028:27017'
+      volumes:
+        - mongodb_data:/data/db
+      networks:
+        - kong-net
+
 networks:
   kong-net:
     external: true
+  
+volumes:
+  mongodb_data:
