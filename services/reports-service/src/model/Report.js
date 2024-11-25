@@ -16,7 +16,7 @@ const reportsSchema = new mongoose.Schema({
     comment: {
         type: String
     },
-    category: {
+    reason: {
         type: String,
         required: true
     }

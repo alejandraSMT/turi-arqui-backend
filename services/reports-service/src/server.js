@@ -7,6 +7,7 @@ const host = 'http://127.0.0.1:' + port;
 
 const reportRoutes = require("./routes/reportRoutes.js");
 
+app.set('trust proxy', true);
 app.listen(port, () => console.log(host));
 
 app.use(express.urlencoded({extended: true}));
