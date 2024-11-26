@@ -29,7 +29,7 @@ services:
     networks:
       - kong-net
 
-  postgres:
+  postgres-blog:
     image: postgres
     restart: always
     ports: 
@@ -38,21 +38,9 @@ services:
       - POSTGRES_HOST=127.0.0.1
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=root
+      - POSTGRES_DB=blog
     networks:
       - kong-net
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
-    ports:
-      - "8081:80"
-    depends_on:
-      - postgres
-    networks:
-      - kong-net  
 
 networks:
   kong-net:

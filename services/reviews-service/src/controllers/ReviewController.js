@@ -64,7 +64,7 @@ exports.postReview = async (req, res) => {
     try {
         const { placeId, rating, title, description, user } = req.body;
         if(rating <= 0){
-            res.status(400).json({error: "El rating debe ser mayor a 0"});
+            return res.status(400).json({error: "El rating debe ser mayor a 0"});
         }
 
         const review = new Review({
