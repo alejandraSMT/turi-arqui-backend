@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const pool = require('./db');
 const app = express();
 
 app.use(cors({
@@ -26,6 +27,15 @@ app.get('/health', (req, res) => {
     } catch (error) {
         healthCheck.message = error;
         res.status(503).send(healthCheck);
+    }
+});
+
+app.get('/users', async (req,res) => {
+    try{
+        const response = await pool.query('SELECT * FROM Usuario');
+        return res.status(200).send(response.rows);
+    }catch(error) {
+        return res.status(500).send({error: "Can't get users"});
     }
 });
 
