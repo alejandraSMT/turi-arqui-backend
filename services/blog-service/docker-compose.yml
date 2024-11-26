@@ -33,12 +33,14 @@ services:
     image: postgres
     restart: always
     ports: 
-      - "5433:5433"
+      - "5433:5432"
     environment:
-      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_HOST=127.0.0.1
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=root
+    networks:
+      - kong-net
 
   pgadmin:
     image: dpage/pgadmin4
@@ -46,9 +48,11 @@ services:
       PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
       PGADMIN_DEFAULT_PASSWORD: "admin"
     ports:
-      - "81:81"
+      - "8081:80"
     depends_on:
-      - postgres  
+      - postgres
+    networks:
+      - kong-net  
 
 networks:
   kong-net:

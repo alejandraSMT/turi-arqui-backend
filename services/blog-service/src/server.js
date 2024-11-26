@@ -8,12 +8,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-<<<<<<< Updated upstream
-=======
-// Rutas del Blog
-app.use('/routes/BlogRoutes', blogRoutes); // Integrar las rutas para los comentarios
-
->>>>>>> Stashed changes
 // Puerto en el que corre el servidor
 const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => {
