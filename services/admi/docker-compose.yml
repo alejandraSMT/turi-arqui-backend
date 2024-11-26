@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "8080:80"
+    networks:
+      - kong-net
+networks:
+  kong-net:
+    external: true
