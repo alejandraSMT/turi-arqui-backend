@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const authRoutes = require('./routes/auth.routes.js');
 
 app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -9,8 +10,7 @@ app.use(cors({
 app.use(express.json());
 
 // Rutas
-require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
+app.use('/api', authRoutes);
 
 // Puerto en el que corre el servidor
 const PORT = process.env.PORT || 3002;

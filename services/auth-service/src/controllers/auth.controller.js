@@ -1,26 +1,44 @@
+const axios = require('axios');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const config = require('../config/auth.config');
-const users = require('../models/user.model');
+const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/auth.config.js');
 
-exports.login = (req, res) => {
-    const { username, password } = req.body;
-    const user = users.find(u => u.username === username);
-    
-    if (!user) {
-        return res.status(404).send({ message: 'Usuario no encontrado' });
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Validar entrada
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email y contraseña son requeridos.' });
+        }
+
+        // Consultar el user-service para obtener al usuario
+        const response = await axios.post('http://kong:8000/user-service/api/verify', {
+            email,
+            password,
+        });
+
+        const user = response.data;
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado.' });
+        }
+
+        // Generar un token JWT
+        const token = jwt.sign(
+            { id: user.id, role: user.roleID },
+            JWT_SECRET,
+            { expiresIn: JWT_EXPIRES_IN }
+        );
+
+        res.status(200).json({ token, expiresIn: JWT_EXPIRES_IN });
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Contraseña incorrecta.' });
+        }
+
+        console.error(error);
+        res.status(500).json({ message: 'Error al iniciar sesión.', error: error.message });
     }
-
-    // Verifica la contraseña
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid) {
-        return res.status(401).send({ message: 'Contraseña incorrecta' });
-    }
-
-    // Genera el token JWT
-    const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, config.secret, { expiresIn: 86400 });
-    res.status(200).send({
-
-        token: token
-    });
 };
+
+
+module.exports = { login };

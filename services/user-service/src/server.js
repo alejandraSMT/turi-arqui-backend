@@ -2,11 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
+const userRoutes = require('./routes/userRoutes');
+
 app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+app.use('/api', userRoutes);
 
 // Puerto en el que corre el servidor
 const PORT = process.env.PORT || 3016;
