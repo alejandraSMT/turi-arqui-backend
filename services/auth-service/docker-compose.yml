@@ -28,6 +28,19 @@ services:
       - "3003:3000"
     networks:
       - kong-net
+  
+  postgres-auth:
+    image: postgres
+    restart: always
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_HOST=127.0.0.1
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=auth
+    networks:
+      - kong-net
 
 networks:
   kong-net:

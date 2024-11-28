@@ -1,33 +1,20 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config/auth.config');
+const { JWT_SECRET } = require('../config/auth.config.js');
 
-verifyToken = (req, res, next) => {
-    let token = req.headers['authorization'];
-    
+const verifyToken = (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+
     if (!token) {
-        return res.status(403).send({ message: 'Token no proporcionado' });
+        return res.status(403).json({ message: 'No se proporcionó un token.' });
     }
 
-    token = token.split(' ')[1]; // Extrae el token de "Bearer <token>"
-    jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: 'Token no válido' });
-        }
-        req.userId = decoded.id;
-        req.userRole = decoded.role;
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded; // Añade los datos del token al objeto req
         next();
-    });
-};
-
-isAdmin = (req, res, next) => {
-    if (req.userRole !== 'admin') {
-        return res.status(403).send({ message: 'Acceso denegado, no eres administrador' });
+    } catch (error) {
+        res.status(401).json({ message: 'Token inválido o expirado.' });
     }
-    next();
 };
 
-const authJwt = {
-    verifyToken,
-    isAdmin
-};
-module.exports = authJwt;
+module.exports = { verifyToken };
