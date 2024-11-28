@@ -39,6 +39,8 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=itinerary
+    volumes:
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - kong-net
 

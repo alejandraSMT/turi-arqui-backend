@@ -1,9 +1,9 @@
 module.exports = {
-    HOST: 'postgres-itinerary',
+    HOST: 'postgres-main',
     PORT:  5432,
     USER: 'root',
     PASSWORD: 'root',
-    DB: 'itinerary',
+    DB: 'main',
     dialect: 'postgres',
 
     pool: {
