@@ -7,28 +7,25 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        LugarID: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        UsuarioID: {
-            type: DataTypes.INTEGER,
+        NombreLugar: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
         NombreUsuario: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        NombreLugar: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        Comentarios: {
-            type: DataTypes.ARRAY(DataTypes.TEXT),
-            allowNull: false,
-        },
         FotoLugar: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(500), // URL o ruta de la foto
+            allowNull: true,
+        },
+        Comentario: {
+            type: DataTypes.TEXT, // Un único comentario por registro
+            allowNull: false,
+        },
+        Hashtag: {
+            type: DataTypes.STRING(50), // Hashtag relacionado
+            allowNull: true,
         },
     }, {
         tableName: 'comentarios',

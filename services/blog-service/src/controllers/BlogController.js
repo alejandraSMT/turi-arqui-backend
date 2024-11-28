@@ -4,11 +4,11 @@ const ComentarioModel = require('../model/Comentario')(sequelize);
 // Obtener todos los comentarios para un lugar específico
 exports.getAllComentarios = async (req, res) => {
     try {
-        const { lugarId } = req.params;
-        const comentarios = await ComentarioModel.findAll({ where: { LugarID: lugarId } });
+        // Obtener todos los comentarios sin filtro por LugarID
+        const comentarios = await ComentarioModel.findAll();
 
         if (comentarios.length === 0) {
-            return res.status(404).json({ error: "No se encontraron comentarios para este lugar." });
+            return res.status(404).json({ error: "No se encontraron comentarios." });
         }
 
         res.status(200).json(comentarios);
@@ -21,14 +21,19 @@ exports.getAllComentarios = async (req, res) => {
 // Crear un nuevo comentario
 exports.createComentario = async (req, res) => {
     try {
-        const { LugarID, UsuarioID, NombreUsuario, NombreLugar, Comentarios } = req.body;
+        const { NombreLugar, NombreUsuario, FotoLugar, Hashtag, Comentario } = req.body;
+
+        // Validación básica
+        if (!NombreLugar || !NombreUsuario || !Comentario) {
+            return res.status(400).json({ error: "NombreLugar, NombreUsuario y Comentario son obligatorios." });
+        }
 
         const nuevoComentario = await ComentarioModel.create({
-            LugarID,
-            UsuarioID,
-            NombreUsuario,
             NombreLugar,
-            Comentarios,
+            NombreUsuario,
+            FotoLugar,
+            Hashtag,
+            Comentario,
         });
 
         res.status(201).json(nuevoComentario);
