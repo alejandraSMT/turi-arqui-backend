@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
-const pool = require('./db');
 const app = express();
 
+const itineraryRoutes = require('./routes/itineraryRoutes');
 app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
-
+app.use('/api', itineraryRoutes);
 // Puerto en el que corre el servidor
 const PORT = process.env.PORT || 3008;
 app.listen(PORT, () => {
