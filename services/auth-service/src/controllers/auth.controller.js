@@ -29,7 +29,7 @@ const login = async (req, res) => {
             { expiresIn: JWT_EXPIRES_IN }
         );
 
-        res.status(200).json({ token, expiresIn: JWT_EXPIRES_IN });
+        res.status(200).json({ token, expiresIn: JWT_EXPIRES_IN, id: user.id, role: user.roleID, isPremium: user.isPremium });
     } catch (error) {
         if (error.response && error.response.status === 401) {
             return res.status(401).json({ message: 'Contraseña incorrecta.' });
